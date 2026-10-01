@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>infoetude – Formation professionnelle et enseignement supérieur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5FB;--surface:#FFFFFF;--ink:#0F1E45;--muted:#4C5878;--line:#D5DCEC;
+  --brand:#2440D4;--brand-ink:#FFFFFF;--sun:#FFC62E;--sun-ink:#3B2A00;--ok:#14794F;--warn:#B3341B;
+  --head:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --body:'Public Sans','Segoe UI',system-ui,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1230;--surface:#141D42;--ink:#EDF1FF;--muted:#A5B0D3;--line:#27335F;
+  --brand:#7C93FF;--brand-ink:#0B1230;--sun:#FFC62E;--sun-ink:#3B2A00;--ok:#57D19A;--warn:#FF8A73;}}
+:root[data-theme="dark"]{
+  --bg:#0B1230;--surface:#141D42;--ink:#EDF1FF;--muted:#A5B0D3;--line:#27335F;
+  --brand:#7C93FF;--brand-ink:#0B1230;--sun:#FFC62E;--sun-ink:#3B2A00;--ok:#57D19A;--warn:#FF8A73;}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;flex-wrap:wrap}
+.logo{font:800 26px/1 var(--head);text-decoration:none;letter-spacing:-.02em}
+.logo b{background:var(--sun);color:var(--sun-ink);padding:1px 7px;border-radius:6px;margin-left:2px}
+nav{display:flex;gap:22px;flex-wrap:wrap;font-weight:500;font-size:15px}
+nav a{text-decoration:none;color:var(--muted)}nav a:hover{color:var(--ink)}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;padding:64px 0 56px;align-items:start}
+h1{font:800 clamp(34px,5.2vw,58px)/1.02 var(--head);letter-spacing:-.03em;margin:0 0 20px}
+.lead{color:var(--muted);font-size:19px;max-width:52ch;margin:0 0 28px}
+.btn{display:inline-block;background:var(--brand);color:var(--brand-ink);font:600 16px var(--body);padding:13px 22px;border-radius:10px;text-decoration:none;border:0;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.board{background:var(--surface);border:2px solid var(--ink);border-radius:16px;box-shadow:8px 8px 0 var(--sun);overflow:hidden}
+.board h2{margin:0;padding:16px 20px;font:700 19px var(--head);border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;gap:10px}
+.board h2 span{font:500 14px var(--body);color:var(--muted)}
+.board ul{list-style:none;margin:0;padding:0}
+.board li{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line);align-items:center}
+.board li:last-child{border-bottom:0}
+.days{min-width:64px;text-align:center;font:800 28px/1 var(--head)}
+.days small{display:block;font:500 12px var(--body);color:var(--muted);margin-top:4px}
+.days.urgent{color:var(--warn)}
+.board li strong{display:block;line-height:1.3}
+.board li em{font-style:normal;color:var(--muted);font-size:14px}
+section{padding:48px 0}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+h2.t{font:800 clamp(26px,3.6vw,36px)/1.1 var(--head);letter-spacing:-.02em;margin:0}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{font:500 14px var(--body);padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.card.first{grid-column:span 2;background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.card.first p,.card.first .meta{color:inherit;opacity:.85}
+.tag{align-self:flex-start;font:600 13px var(--body);padding:3px 10px;border-radius:6px;background:var(--bg);color:var(--ink)}
+.card.first .tag{background:var(--sun);color:var(--sun-ink)}
+.card h3{font:700 21px/1.2 var(--head);margin:0}
+.card.first h3{font-size:28px}
+.card p{margin:0;color:var(--muted);font-size:15.5px}
+.meta{margin-top:auto;font-size:13.5px;color:var(--muted)}
+.hidden{display:none}
+.news{background:var(--ink);color:var(--bg);border-radius:20px;padding:44px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center}
+.news h2{font:800 32px/1.1 var(--head);margin:0 0 10px;letter-spacing:-.02em}
+.news p{margin:0;opacity:.8}
+.news form{display:flex;flex-direction:column;gap:10px}
+.news input,.news select{font:400 16px var(--body);padding:12px 14px;border-radius:10px;border:0;width:100%}
+.news .btn{background:var(--sun);color:var(--sun-ink)}
+.ok{min-height:1.4em;font-weight:600;color:var(--sun)}
+footer{border-top:1px solid var(--line);padding:28px 0 36px;color:var(--muted);font-size:14.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media (max-width:860px){
+  .hero,.news{grid-template-columns:1fr}.hero{padding-top:40px}
+  .grid{grid-template-columns:1fr 1fr}.card.first{grid-column:span 2}.news{padding:28px}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}.card.first{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a class="logo" href="#" aria-label="infoetude, accueil">info<b>etude</b></a>
+  <nav aria-label="Navigation principale">
+    <a href="#articles">Actualités</a><a href="#articles" data-go="Bourses">Bourses</a><a href="#articles" data-go="Formations">Formations</a><a href="#articles" data-go="Concours">Concours</a><a href="#lettre">Newsletter</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div>
+    <h1>Formations, bourses et concours, avant la date limite.</h1>
+    <p class="lead">infoetude suit chaque jour l'actualité de la formation professionnelle et de l'enseignement supérieur, et vous dit ce qui ferme bientôt.</p>
+    <a class="btn" href="#articles">Lire les dernières publications</a>
+  </div>
+  <aside class="board" aria-labelledby="bt">
+    <h2 id="bt">Bientôt clôturé <span>mis à jour chaque jour</span></h2>
+    <ul id="deadlines"></ul>
+  </aside>
+</div>
+
+<section id="articles"><div class="wrap">
+  <div class="head">
+    <h2 class="t">Dernières publications</h2>
+    <div class="filters" role="group" aria-label="Filtrer par rubrique" id="filters"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section id="lettre"><div class="wrap">
+  <div class="news">
+    <div>
+      <h2>Recevez les dates limites chaque semaine.</h2>
+      <p>Un e-mail par semaine avec les opportunités qui ferment bientôt, dans la rubrique de votre choix.</p>
+    </div>
+    <div>
+      <form id="nl">
+        <label for="em" class="sr" style="position:absolute;left:-9999px">Adresse e-mail</label>
+        <input id="em" type="email" placeholder="Votre adresse e-mail" required>
+        <select aria-label="Rubrique préférée"><option>Toutes les rubriques</option><option>Bourses</option><option>Formations</option><option>Concours</option><option>Enseignement supérieur</option></select>
+        <button class="btn" type="submit">S'abonner</button>
+        <div class="ok" role="status" id="ok"></div>
+      </form>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span><b>infoetude</b> : veille sur la formation et l'enseignement supérieur.</span>
+  <span>Contenus de démonstration. Vérifiez toujours les dates sur le site officiel de l'organisme.</span>
+</div></footer>
+
+<script>
+var today=new Date();
+var deadlines=[
+ {d:3,t:"Bourse d'excellence pour un master à l'étranger",o:"Bourses"},
+ {d:9,t:"Concours d'entrée dans une école d'ingénieurs",o:"Concours"},
+ {d:14,t:"Formation certifiante en gestion de projet",o:"Formations"},
+ {d:21,t:"Appel à candidatures : programme de mobilité étudiante",o:"Enseignement supérieur"}
+];
+document.getElementById('deadlines').innerHTML=deadlines.map(function(x){
+ return '<li><div class="days'+(x.d<=7?' urgent':'')+'">'+x.d+'<small>jours</small></div><div><strong>'+x.t+'</strong><em>'+x.o+'</em></div></li>';}).join('');
+
+var posts=[
+ {c:"Enseignement supérieur",t:"Réforme des licences : ce qui change pour les étudiants à la rentrée",p:"Nouveaux parcours, crédits et passerelles : le point sur les évolutions et leurs effets concrets.",m:"Aujourd'hui · 5 min"},
+ {c:"Bourses",t:"Bourses d'études : comment constituer un dossier solide",p:"Pièces à réunir, erreurs fréquentes et calendrier à suivre.",m:"Hier · 4 min"},
+ {c:"Formations",t:"Cinq formations courtes qui mènent à l'emploi",p:"Durée, coût et débouchés de formations professionnalisantes.",m:"Il y a 2 jours · 6 min"},
+ {c:"Concours",t:"Préparer un concours d'entrée en école : le plan sur 12 semaines",p:"Une méthode de révision hebdomadaire et les ressources gratuites.",m:"Il y a 3 jours · 7 min"},
+ {c:"Formations",t:"Reconversion : financer sa formation professionnelle",p:"Dispositifs de financement, conditions d'accès et démarches.",m:"Il y a 4 jours · 5 min"},
+ {c:"Enseignement supérieur",t:"Étudier à l'étranger : choisir entre master local et master international",p:"Coûts, reconnaissance des diplômes et perspectives professionnelles.",m:"Il y a 5 jours · 8 min"}
+];
+var cats=["Toutes"].concat(["Bourses","Formations","Concours","Enseignement supérieur"]);
+var cur="Toutes",grid=document.getElementById('grid'),fb=document.getElementById('filters');
+function render(){
+ fb.innerHTML=cats.map(function(c){return '<button type="button" aria-pressed="'+(c===cur)+'" data-c="'+c+'">'+c+'</button>';}).join('');
+ var list=posts.filter(function(p){return cur==="Toutes"||p.c===cur;});
+ grid.innerHTML=list.length?list.map(function(p,i){
+  return '<article class="card'+(i===0?' first':'')+'"><span class="tag">'+p.c+'</span><h3>'+p.t+'</h3><p>'+p.p+'</p><span class="meta">'+p.m+'</span></article>';}).join(''):'<p>Aucune publication dans cette rubrique pour le moment.</p>';
+}
+fb.addEventListener('click',function(e){var b=e.target.closest('button');if(b){cur=b.dataset.c;render();}});
+document.querySelectorAll('[data-go]').forEach(function(a){a.addEventListener('click',function(){cur=a.dataset.go;render();});});
+render();
+document.getElementById('nl').addEventListener('submit',function(e){e.preventDefault();
+ document.getElementById('ok').textContent="Merci, votre inscription est enregistrée (démonstration).";this.reset();});
+</script>
+</body>
+</html>

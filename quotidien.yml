@@ -1,0 +1,32 @@
+name: infoetude-quotidien
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # chaque jour à 06:00 UTC
+  workflow_dispatch:       # lancement manuel possible
+
+permissions:
+  contents: write
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Recherche et rédaction par Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AUTO_PUBLISH: "0"   # "0" = brouillons à valider, "1" = publication directe
+        run: python infoetude_bot.py run
+      - name: Enregistrer les changements
+        run: |
+          git config user.name "infoetude-bot"
+          git config user.email "bot@infoetude.local"
+          git add data site
+          git diff --cached --quiet || git commit -m "Mise à jour quotidienne"
+          git push
