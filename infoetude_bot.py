@@ -3,6 +3,7 @@
 
 Commandes :
     python infoetude_bot.py run                 # recherche + rédaction + génération du site
+    python infoetude_bot.py import [fichier]    # importe des articles rédigés dans le chat (JSON)
     python infoetude_bot.py drafts              # liste les brouillons à relire
     python infoetude_bot.py approve <slug|all>  # valide un brouillon (ou tous) et régénère le site
     python infoetude_bot.py build [--apercu]    # régénère le site (--apercu inclut les brouillons)
@@ -102,11 +103,10 @@ def valider(a, rubrique):
 
 # ---------------------------------------------------------------- Claude
 def extraire_json(texte):
-    debut = texte.find('{"articles"')
-    if debut == -1:
-        debut = texte.find("{")
-    if debut == -1:
+    m = re.search(r'\{\s*"articles"', texte) or re.search(r"\{", texte)
+    if not m:
         raise ValueError("Aucun JSON dans la réponse")
+    debut = m.start()
     obj, _ = json.JSONDecoder().raw_decode(texte[debut:])
     return obj
 
@@ -156,6 +156,45 @@ def cmd_run(_args):
     sauver(posts)
     build(posts)
     print(f"{nouveaux} nouvel(s) article(s).")
+
+
+def cmd_import(args):
+    """Importe des articles rédigés dans le chat (JSON collé ou fichier)."""
+    if args.fichier:
+        texte = Path(args.fichier).read_text(encoding="utf-8")
+    else:
+        print("Collez le JSON puis validez avec Ctrl+D (Ctrl+Z puis Entrée sous Windows) :")
+        texte = sys.stdin.read()
+    try:
+        articles = extraire_json(texte)["articles"]
+    except (ValueError, KeyError, json.JSONDecodeError) as e:
+        sys.exit(f"JSON illisible : {e}")
+    posts = charger()
+    slugs = {p["slug"] for p in posts}
+    urls = {s["url"] for p in posts for s in p["sources"]}
+    n = 0
+    for a in articles:
+        rubrique = a.get("rubrique")
+        titre = a.get("titre", "?")
+        if rubrique not in RUBRIQUES:
+            print(f"ignoré (rubrique inconnue {rubrique!r}) : {titre}")
+            continue
+        p = valider(a, rubrique)
+        if not p:
+            print(f"ignoré (champ manquant ou source invalide) : {titre}")
+            continue
+        if p["slug"] in slugs or any(s["url"] in urls for s in p["sources"]):
+            print(f"ignoré (déjà présent) : {titre}")
+            continue
+        p["statut"] = "publie" if args.publier else "brouillon"
+        posts.append(p)
+        slugs.add(p["slug"])
+        urls.update(s["url"] for s in p["sources"])
+        n += 1
+        print(f"+ {p['titre']} ({p['statut']})")
+    sauver(posts)
+    build(posts)
+    print(f"{n} article(s) importé(s).")
 
 
 # ---------------------------------------------------------------- validation humaine
@@ -342,6 +381,10 @@ def main():
     ap = argparse.ArgumentParser(description="infoetude : site alimenté par Claude")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("run").set_defaults(fn=cmd_run)
+    i = sub.add_parser("import", help="importe des articles rédigés dans le chat")
+    i.add_argument("fichier", nargs="?", help="fichier JSON (sinon collez dans le terminal)")
+    i.add_argument("--publier", action="store_true", help="publie sans passer par brouillon")
+    i.set_defaults(fn=cmd_import)
     sub.add_parser("drafts").set_defaults(fn=cmd_drafts)
     a = sub.add_parser("approve")
     a.add_argument("cible", help="slug de l'article, ou 'all'")
